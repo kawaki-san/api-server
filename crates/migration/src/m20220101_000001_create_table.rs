@@ -1,9 +1,9 @@
-use sea_orm_migration::prelude::*;
 use entity::{
     account, ad, category, region,
     sea_orm::{DbBackend, EntityTrait, Schema},
     session, user, verification_token,
 };
+use sea_orm_migration::prelude::*;
 
 #[derive(DeriveMigrationName)]
 pub struct Migration;
@@ -59,4 +59,3 @@ fn get_seaorm_create_stmt<E: EntityTrait>(e: E) -> TableCreateStatement {
 fn get_seaorm_drop_stmt<E: EntityTrait>(e: E) -> TableDropStatement {
     Table::drop().table(e).if_exists().to_owned()
 }
-
