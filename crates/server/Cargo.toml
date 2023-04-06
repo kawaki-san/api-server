@@ -8,7 +8,9 @@ default-run = "sellershut"
 
 [dependencies]
 api = { version = "0.1.0", path = "../api" }
+async-graphql-axum = "5.0.7"
 axum = "0.6.12"
+dotenvy = "0.15.7"
 entity = { version = "0.1.0", path = "../entity" }
 tokio = { version = "1.27.0", features = ["rt-multi-thread", "macros"] }
 tower-http = { version = "0.4.0", features = ["trace", "cors"] }
