@@ -9,6 +9,8 @@ name = "migration"
 path = "src/lib.rs"
 
 [dependencies]
+dotenvy = "0.15.7"
+entity = { version = "0.1.0", path = "../entity" }
 tokio = { version = "1.27.0", features = ["rt-multi-thread", "macros"] }
 
 [dependencies.sea-orm-migration]

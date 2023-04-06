@@ -1,4 +1,9 @@
 use sea_orm_migration::prelude::*;
+use entity::{
+    account, ad, category, region,
+    sea_orm::{DbBackend, EntityTrait, Schema},
+    session, user, verification_token,
+};
 
 #[derive(DeriveMigrationName)]
 pub struct Migration;
@@ -6,43 +11,52 @@ pub struct Migration;
 #[async_trait::async_trait]
 impl MigrationTrait for Migration {
     async fn up(&self, manager: &SchemaManager) -> Result<(), DbErr> {
-        // Replace the sample below with your own migration scripts
-        todo!();
+        let stmts = vec![
+            get_seaorm_create_stmt(region::Entity),
+            get_seaorm_create_stmt(verification_token::Entity),
+            get_seaorm_create_stmt(user::Entity),
+            get_seaorm_create_stmt(account::Entity),
+            get_seaorm_create_stmt(session::Entity),
+            get_seaorm_create_stmt(category::Entity),
+            get_seaorm_create_stmt(ad::Entity),
+        ];
 
-        manager
-            .create_table(
-                Table::create()
-                    .table(Post::Table)
-                    .if_not_exists()
-                    .col(
-                        ColumnDef::new(Post::Id)
-                            .integer()
-                            .not_null()
-                            .auto_increment()
-                            .primary_key(),
-                    )
-                    .col(ColumnDef::new(Post::Title).string().not_null())
-                    .col(ColumnDef::new(Post::Text).string().not_null())
-                    .to_owned(),
-            )
-            .await
+        for stmt in stmts {
+            manager.create_table(stmt.to_owned()).await?;
+        }
+
+        Ok(())
     }
 
     async fn down(&self, manager: &SchemaManager) -> Result<(), DbErr> {
-        // Replace the sample below with your own migration scripts
-        todo!();
+        let stmts = vec![
+            get_seaorm_drop_stmt(ad::Entity),
+            get_seaorm_drop_stmt(category::Entity),
+            get_seaorm_drop_stmt(session::Entity),
+            get_seaorm_drop_stmt(account::Entity),
+            get_seaorm_drop_stmt(verification_token::Entity),
+            get_seaorm_drop_stmt(user::Entity),
+            get_seaorm_drop_stmt(region::Entity),
+        ];
 
-        manager
-            .drop_table(Table::drop().table(Post::Table).to_owned())
-            .await
+        for stmt in stmts {
+            manager.drop_table(stmt.to_owned()).await?;
+        }
+
+        Ok(())
     }
 }
 
-/// Learn more at https://docs.rs/sea-query#iden
-#[derive(Iden)]
-enum Post {
-    Table,
-    Id,
-    Title,
-    Text,
+fn get_seaorm_create_stmt<E: EntityTrait>(e: E) -> TableCreateStatement {
+    let schema = Schema::new(DbBackend::Postgres);
+
+    schema
+        .create_table_from_entity(e)
+        .if_not_exists()
+        .to_owned()
 }
+
+fn get_seaorm_drop_stmt<E: EntityTrait>(e: E) -> TableDropStatement {
+    Table::drop().table(e).if_exists().to_owned()
+}
+
