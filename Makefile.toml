@@ -20,9 +20,7 @@ command = "cargo"
 args = ["test"]
 dependencies = ["clean"]
 
-[tasks.my-flow]
-dependencies = [
-    "format",
-    "build",
-    "test"
-]
+[tasks.dev]
+workspace = false
+command = "cargo"
+args = [ "watch", "-x run" ]
