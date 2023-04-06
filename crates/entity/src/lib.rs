@@ -3,5 +3,6 @@ pub use sea_orm;
 
 pub mod account;
 pub mod ad;
+pub mod category;
 pub mod session;
 pub mod user;
