@@ -1,11 +1,12 @@
+mod mutation;
 mod query;
 
 use entity::{
-    async_graphql::{EmptyMutation, EmptySubscription, Schema},
+    async_graphql::{EmptySubscription, Schema},
     sea_orm,
 };
 
-use self::query::Query;
+use self::{mutation::Mutation, query::Query};
 
 pub struct Database {
     connection: sea_orm::DatabaseConnection,
@@ -26,12 +27,12 @@ impl Database {
     }
 }
 
-pub type AppSchema = Schema<Query, EmptyMutation, EmptySubscription>;
+pub type AppSchema = Schema<Query, Mutation, EmptySubscription>;
 
 pub async fn build_schema() -> AppSchema {
     let db = Database::new().await;
 
-    Schema::build(Query::default(), EmptyMutation, EmptySubscription)
+    Schema::build(Query::default(), Mutation::default(), EmptySubscription)
         .data(db)
         .finish()
 }
