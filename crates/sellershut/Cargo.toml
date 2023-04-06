@@ -7,4 +7,6 @@ default-run = "sellershut"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+axum = "0.6.12"
 entity = { version = "0.1.0", path = "../entity" }
+tokio = { version = "1.27.0", features = ["rt-multi-thread", "macros"] }
