@@ -1,8 +1,9 @@
+pub mod account;
 pub mod user;
 
 use entity::async_graphql;
 
-use self::user::UserMutation;
+use self::{account::AccountMutation, user::UserMutation};
 
 #[derive(async_graphql::MergedObject, Default)]
-pub struct Mutation(UserMutation);
+pub struct Mutation(AccountMutation, UserMutation);
