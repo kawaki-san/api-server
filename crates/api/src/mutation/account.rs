@@ -63,29 +63,29 @@ impl AccountMutation {
             }
         }
     }
-    async fn delete_account(
-        &self,
-        ctx: &Context<'_>,
-        id: String,
-    ) -> Result<Option<account::Model>> {
+    async fn delete_account(&self, ctx: &Context<'_>, id: String) -> Result<account::Model> {
         let span = span!(Level::TRACE, "Delete Account");
         let _enter = span.enter();
         debug!("{id:?}");
         let db = ctx.data::<Database>()?;
 
-        let account = account::Entity::find_by_id(&id)
+        if let Some(account) = account::Entity::find_by_id(&id)
             .one(db.get_connection())
-            .await?;
-        let res = account::Entity::delete_by_id(&id)
-            .exec(db.get_connection())
-            .await?;
+            .await?
+        {
+            let res = account::Entity::delete_by_id(&id)
+                .exec(db.get_connection())
+                .await?;
 
-        if res.rows_affected <= 1 {
-            debug!(id = id, "account deleted successfully");
-            Ok(account)
+            if res.rows_affected <= 1 {
+                debug!(id = id, "account deleted successfully");
+                Ok(account)
+            } else {
+                error!(id = id, "could not delete account");
+                Err("could not delete".into())
+            }
         } else {
-            error!(id = id, "could not delete account");
-            Err("could not delete".into())
+            Err("there is no account with that id".into())
         }
     }
 }
