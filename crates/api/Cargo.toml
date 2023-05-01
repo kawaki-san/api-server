@@ -8,5 +8,5 @@ edition = "2021"
 [dependencies]
 cuid2 = "0.1.0"
 entity = { version = "0.1.0", path = "../entity" }
-tokio = { version = "1.27.0", features = ["macros"] }
+tokio = { version = "1.28.0", features = ["macros"] }
 tracing = "0.1.37"
